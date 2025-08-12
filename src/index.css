@@ -121,6 +121,9 @@
 
 @layer components {
     .maximum-w {
-        @apply max-w-[1280px] mx-auto;
+        @apply max-w-full sm:max-w-[480px] md:max-w-[768px] lg:max-w-[1024px] mx-auto;
+    }
+    .container-space {
+        @apply px-6 my-4 md:px-8 md:my-8 lg:my-10;
     }
 }

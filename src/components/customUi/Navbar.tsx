@@ -5,7 +5,7 @@ function Navbar() {
     return (
         <nav>
             {/* desktop nav */}
-            <ul className='hidden gap-3 mr-4 md:flex'>
+            <ul className='hidden gap-3 items-center md:flex'>
                 <li>Home</li>
                 <li>Dashboard</li>
             </ul>

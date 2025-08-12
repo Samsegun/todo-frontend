@@ -1,7 +1,6 @@
-import { MonitorX } from "lucide-react";
 import "./App.css";
-import MenuModal from "./components/customUi/Menu";
 import Navbar from "./components/customUi/Navbar";
+import Home from "./pages/Home";
 
 function App() {
     return (
@@ -14,20 +13,7 @@ function App() {
                 </div>
             </header>
 
-            <MenuModal>
-                <MenuModal.ModalTrigger>
-                    <MonitorX />
-                </MenuModal.ModalTrigger>
-
-                <MenuModal.ModalContent>
-                    <section>
-                        <div>
-                            Lorem ipsum dolor sit amet consectetur adipisicing
-                            elit. Quaerat, impedit.
-                        </div>
-                    </section>
-                </MenuModal.ModalContent>
-            </MenuModal>
+            <Home />
         </>
     );
 }
