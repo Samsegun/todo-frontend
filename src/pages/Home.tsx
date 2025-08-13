@@ -1,5 +1,6 @@
-import Button from "@/components/customUi/Button";
-import { PlusSquareIcon } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Check, Pencil, PlusSquareIcon, Trash } from "lucide-react";
+// import {Card, CardHeader, CardContent} from "@/components/ui/card"
 
 function Home() {
     return (
@@ -13,14 +14,7 @@ function Home() {
                         </p>
                     </div>
 
-                    {/* <button
-                        className='pointer-events-none md:pointer-events-auto cursor-pointer flex items-center gap-2 transition-colors
-                     duration-150 hover:bg-gray-700 p-2 rounded-xl'>
-                        <span>Add Todo</span>
-                        <PlusSquareIcon />
-                    </button> */}
-
-                    <Button style={"gap-2 p-2 rounded-xl"}>
+                    <Button variant='ghost' className='cursor-pointer'>
                         <span>Add Todo</span>
                         <PlusSquareIcon />
                     </Button>
@@ -30,20 +24,59 @@ function Home() {
                     <section className='my-8'>
                         <p
                             className='w-fit flex items-center space-x-1
-                     rounded-lg shadow-sm border border-gray-200'>
-                            <Button style='px-4 py-2 rounded-lg'>All</Button>
-                            <Button style='px-4 py-2 rounded-lg'>Active</Button>
-                            <Button style='px-4 py-2 rounded-lg'>
+                     rounded-lg border border-gray-200'>
+                            <Button
+                                variant={"ghost"}
+                                className='cursor-pointer'>
+                                All
+                            </Button>
+                            <Button
+                                variant={"ghost"}
+                                className='cursor-pointer'>
+                                Active
+                            </Button>
+                            <Button
+                                variant={"ghost"}
+                                className='cursor-pointer'>
                                 Completed
                             </Button>
                         </p>
                     </section>
 
-                    <section>
+                    <section className='space-y-8'>
                         {/* buutoncolors to use: edit(#ff784b), delete(#ef4444), #32bc9b */}
-                        <article>Buy clothes</article>
-                        <article>Buy groceries</article>
-                        <article>Go diving</article>
+                        <article
+                            className='flex flex-col p-3 lg:p-4 space-y-4
+                     rounded-lg border border-gray-100'>
+                            <h2 className='text-xl'>Buy Clothes</h2>
+
+                            <p className='ml-2 italic'>
+                                - Go buy some jeans and shirts Lorem ipsum,
+                                dolor sit amet consectetur adipisicing elit.
+                            </p>
+
+                            <p className='flex items-center justify-end flex-wrap gap-2'>
+                                <Button className='bg-[#32bc9c7b] hover:bg-[#325149da] w-20 md:w-auto'>
+                                    <span className='hidden md:flex'>
+                                        {" "}
+                                        Mark as completed{" "}
+                                    </span>
+                                    <Check />
+                                </Button>
+                                <Button className='bg-[#ff784b] hover:bg-[#ff784bbb] w-20 md:w-auto'>
+                                    <span className='hidden md:flex'>Edit</span>
+                                    <Pencil />
+                                </Button>
+                                <Button
+                                    variant={"destructive"}
+                                    className='w-20 md:w-auto'>
+                                    <span className='hidden md:flex'>
+                                        Delete
+                                    </span>
+                                    <Trash />
+                                </Button>
+                            </p>
+                        </article>
                     </section>
                 </main>
             </div>

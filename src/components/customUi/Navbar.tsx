@@ -8,6 +8,7 @@ function Navbar() {
             <ul className='hidden gap-3 items-center md:flex'>
                 <li>Home</li>
                 <li>Dashboard</li>
+                <li>Login</li>
             </ul>
 
             {/* mobile nav */}
@@ -17,9 +18,10 @@ function Navbar() {
                 </MenuModal.MenuTrigger>
 
                 <MenuModal.MobileMenuContent>
-                    <ul>
+                    <ul className='items-start px-4 py-2 text-[#32bc9b] space-y-8 text-xl'>
                         <li>Home</li>
                         <li>Dashboard</li>
+                        <li>Login</li>
                     </ul>
                 </MenuModal.MobileMenuContent>
             </MenuModal>

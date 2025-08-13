@@ -6,6 +6,8 @@ import {
     type MouseEvent,
     type ReactNode,
 } from "react";
+import { MobileMenuContent, MobileMenuTrigger } from "./MobileMenu";
+import { ModalContent, ModalTrigger } from "./Modal";
 
 type MenuContextProps = {
     isOpen: boolean;
@@ -21,7 +23,7 @@ const MenuType = {
 
 type MenuType = (typeof MenuType)[keyof typeof MenuType];
 
-const sharedStyles = `fixed z-50 bg-white text-black rounded-lg shadow-lg border min-w-48 py-2`;
+export const sharedStyles = `fixed z-50 bg-black rounded-lg shadow-lg border border-gray-500 min-w-48 py-2`;
 
 const MobileMenuContext = createContext<MenuContextProps | null>(null);
 
@@ -71,60 +73,7 @@ const MenuModal = ({ children }: { children: ReactNode }) => {
     );
 };
 
-const MobileMenuTrigger = ({ children }: { children: ReactNode }) => {
-    const { toggleMenu } = useMenuModalContext();
-
-    return (
-        <button onClick={e => toggleMenu(e, "menu")} className='md:hidden'>
-            {children}
-        </button>
-    );
-};
-
-const ModalTrigger = ({ children }: { children: ReactNode }) => {
-    const { toggleMenu } = useMenuModalContext();
-
-    return <button onClick={e => toggleMenu(e, "modal")}>{children}</button>;
-};
-
-const MobileMenuContent = ({ children }: { children: ReactNode }) => {
-    const { isOpen, position } = useMenuModalContext();
-
-    if (!isOpen) return null;
-
-    return (
-        <div
-            className={`${sharedStyles} `}
-            style={{ right: `${position.x}px`, top: `${position.y}px` }}>
-            {children}
-        </div>
-    );
-};
-
-const ModalContent = ({ children }: { children: ReactNode }) => {
-    const { isOpen, position, closeMenu } = useMenuModalContext();
-
-    if (!isOpen) return null;
-
-    return (
-        <>
-            {/* backdrop */}
-            <div
-                className='fixed inset-0 bg-black opacity-20 z-40'
-                onClick={closeMenu}
-            />
-
-            {/* modal */}
-            <div
-                className={`${sharedStyles} -translate-y-1/2 -translate-x-1/2`}
-                style={{ top: `${position.y}%`, left: `${position.x}%` }}>
-                {children}
-            </div>
-        </>
-    );
-};
-
-function useMenuModalContext() {
+export function useMenuModalContext() {
     const context = useContext(MobileMenuContext);
     if (!context) {
         throw new Error("MenuModalContext must be used within a MenuModal");
