@@ -1,4 +1,5 @@
 import { Menu } from "lucide-react";
+import { NavLink } from "react-router";
 import MenuModal from "./Menu";
 
 function Navbar() {
@@ -6,9 +7,13 @@ function Navbar() {
         <nav>
             {/* desktop nav */}
             <ul className='hidden gap-3 items-center md:flex'>
-                <li>Home</li>
-                <li>Dashboard</li>
-                <li>Login</li>
+                <li>
+                    <NavLink to='/'>Home</NavLink>
+                </li>
+
+                <li>
+                    <NavLink to='/dashboard'>Dashboard</NavLink>
+                </li>
             </ul>
 
             {/* mobile nav */}
@@ -19,9 +24,13 @@ function Navbar() {
 
                 <MenuModal.MobileMenuContent>
                     <ul className='items-start px-4 py-2 text-[#32bc9b] space-y-8 text-xl'>
-                        <li>Home</li>
-                        <li>Dashboard</li>
-                        <li>Login</li>
+                        <li>
+                            <NavLink to='/'>Home</NavLink>
+                        </li>
+
+                        <li>
+                            <NavLink to='/dashboard'>Dashboard</NavLink>
+                        </li>
                     </ul>
                 </MenuModal.MobileMenuContent>
             </MenuModal>

@@ -1,20 +1,25 @@
+import { Route, Routes } from "react-router";
 import "./App.css";
-import Navbar from "./components/customUi/Navbar";
+import AuthLayout from "./components/customUi/AuthLayout";
+import ProtectedRoute from "./components/customUi/ProtectedRoute";
+import Dashboard from "./pages/DAshboard";
 import Home from "./pages/Home";
+import Login from "./pages/Login";
+import Register from "./pages/Register";
 
 function App() {
     return (
-        <>
-            <header className='bg-black'>
-                <div className='maximum-w p-4 flex justify-between items-center'>
-                    <h1 className='text-xl'>Todo App</h1>
+        <Routes>
+            <Route element={<ProtectedRoute />}>
+                <Route index element={<Home />} />
+                <Route path='dashboard' element={<Dashboard />} />
+            </Route>
 
-                    <Navbar />
-                </div>
-            </header>
-
-            <Home />
-        </>
+            <Route element={<AuthLayout />}>
+                <Route path='login' element={<Login />} />
+                <Route path='register' element={<Register />} />
+            </Route>
+        </Routes>
     );
 }
 
