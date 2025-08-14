@@ -2,18 +2,30 @@ import { Menu } from "lucide-react";
 import { NavLink } from "react-router";
 import MenuModal from "./Menu";
 
+const navItems = ["/", "dashboard"];
+
 function Navbar() {
     return (
         <nav>
             {/* desktop nav */}
             <ul className='hidden gap-3 items-center md:flex'>
-                <li>
-                    <NavLink to='/'>Home</NavLink>
-                </li>
-
-                <li>
-                    <NavLink to='/dashboard'>Dashboard</NavLink>
-                </li>
+                {navItems.map(link => {
+                    return (
+                        <li key={link}>
+                            <NavLink
+                                to={link === "/" ? link : `/${link}`}
+                                className={({ isActive }) =>
+                                    `${
+                                        isActive
+                                            ? "text-[#32bc9b]"
+                                            : "text-white"
+                                    } capitalize hover:text-[#32bc9c7b]`
+                                }>
+                                {link === "/" ? "home" : link}
+                            </NavLink>
+                        </li>
+                    );
+                })}
             </ul>
 
             {/* mobile nav */}
@@ -23,14 +35,24 @@ function Navbar() {
                 </MenuModal.MenuTrigger>
 
                 <MenuModal.MobileMenuContent>
-                    <ul className='items-start px-4 py-2 text-[#32bc9b] space-y-8 text-xl'>
-                        <li>
-                            <NavLink to='/'>Home</NavLink>
-                        </li>
-
-                        <li>
-                            <NavLink to='/dashboard'>Dashboard</NavLink>
-                        </li>
+                    <ul className='items-start px-4 py-2 space-y-8 text-xl'>
+                        {navItems.map(link => {
+                            return (
+                                <li key={link}>
+                                    <NavLink
+                                        to={link === "/" ? link : `/${link}`}
+                                        className={({ isActive }) =>
+                                            `${
+                                                isActive
+                                                    ? "text-[#32bc9b]"
+                                                    : "text-white"
+                                            } capitalize hover:text-[#32bc9c7b]`
+                                        }>
+                                        {link === "/" ? "home" : link}
+                                    </NavLink>
+                                </li>
+                            );
+                        })}
                     </ul>
                 </MenuModal.MobileMenuContent>
             </MenuModal>
