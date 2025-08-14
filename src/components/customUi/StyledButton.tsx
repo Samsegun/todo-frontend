@@ -16,7 +16,7 @@ import { Button } from "../ui/button";
 
 type StyledButtonProps = {
     children: ReactNode;
-    variant:
+    variant?:
         | "link"
         | "default"
         | "destructive"
@@ -26,6 +26,7 @@ type StyledButtonProps = {
         | null
         | undefined;
     styles?: string;
+    type?: "button" | "submit" | "reset";
 };
 
 function StyledButton({ children, variant, styles }: StyledButtonProps) {
