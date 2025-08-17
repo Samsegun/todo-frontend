@@ -6,28 +6,53 @@ export interface User {
     email: string;
 }
 
+export interface CreateUserRequest {
+    message: string;
+    user: User & { createdAt: Date };
+    token: string;
+}
+
+export interface LoginUserRequest {
+    message: string;
+    user: User;
+    token: string;
+}
+
 export interface Todo {
     _id: string;
     title: string;
-    description: string;
+    description?: string;
     completed: boolean;
     creator: string;
+    createdAt: Date;
+    updatedAt: Date;
 }
 
 export interface CreateTodoRequest {
+    _id: string;
     title: string;
-    description: string;
+    description?: string;
     completed: boolean;
     creator: string;
 }
-export interface UpdateTodoRequest {
+
+// export interface UpdateTodoRequest {
+//     updatedTodo: {
+
+//     }
+// }
+export interface DeleteTodoRequest {
     message: string;
-    todo: Todo;
-    user: Omit<User, "username">;
+    deletedResult: {
+        acknowledged: boolean;
+        deletedCount: number;
+    };
 }
 
 const API_BASE_URL =
-    process.env.TODO_APP_API_URL || "http://localhost:3001/api";
+    import.meta.env.VITE_TODO_API_URL || "http://localhost:3001";
+
+console.log(API_BASE_URL);
 
 class ApiService {
     private axiosInstance: AxiosInstance;
@@ -90,22 +115,32 @@ class ApiService {
             email: string,
             username: string,
             password: string
-        ): Promise<{ user: User; token: string }> => {
-            const response = await this.axiosInstance.post("/auth/register", {
+        ): Promise<CreateUserRequest> => {
+            const response = await this.axiosInstance.post("/auth/signup", {
                 email,
                 username,
                 password,
             });
+
+            if (response.data.token) {
+                this.setToken(response.data.token);
+            }
+
             return response.data;
         },
         login: async (
             emailUsername: string,
             password: string
-        ): Promise<{ user: User; token: string }> => {
+        ): Promise<LoginUserRequest> => {
             const response = await this.axiosInstance.post("/auth/login", {
                 emailUsername,
                 password,
             });
+
+            if (response.data.token) {
+                this.setToken(response.data.token);
+            }
+
             return response.data;
         },
         logout: async () => {
@@ -116,7 +151,7 @@ class ApiService {
 
     // todo requests
     todos = {
-        getAll: async (): Promise<Todo[]> => {
+        getAll: async (): Promise<{ message: string; todos: Todo[] }> => {
             const response = await this.axiosInstance.get("/todos");
             return response.data;
         },
@@ -126,15 +161,17 @@ class ApiService {
             return response.data;
         },
 
-        create: async (todo: CreateTodoRequest): Promise<Todo> => {
+        create: async (
+            todo: CreateTodoRequest
+        ): Promise<{ message: string; todo: CreateTodoRequest }> => {
             const response = await this.axiosInstance.post("/todos", todo);
             return response.data;
         },
 
         update: async (
             id: number,
-            updates: UpdateTodoRequest
-        ): Promise<Todo> => {
+            updates: Todo
+        ): Promise<{ message: string; updatedTodo: Todo }> => {
             const response = await this.axiosInstance.put(
                 `/todos/${id}`,
                 updates
@@ -142,15 +179,17 @@ class ApiService {
             return response.data;
         },
 
-        delete: async (id: number): Promise<void> => {
-            await this.axiosInstance.delete(`/todos/${id}`);
+        delete: async (id: number): Promise<DeleteTodoRequest> => {
+            const response = await this.axiosInstance.delete(`/todos/${id}`);
+
+            return response.data;
         },
     };
 
     // user requests
-    user = {};
+    // user = {};
 }
 
 const apiService = new ApiService(API_BASE_URL);
 
-const { auth, todos, user } = apiService;
+export const { auth, todos } = apiService;

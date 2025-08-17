@@ -9,12 +9,13 @@ import {
 import { Input } from "@/components/ui/input";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
+import { Link, useNavigate } from "react-router";
 import { z } from "zod";
 
 import PageHeader from "@/components/customUi/PageHeader";
 import PageWrapper from "@/components/customUi/PageWrapper";
 import StyledButton from "@/components/customUi/StyledButton";
-import { Link } from "react-router";
+import { auth } from "@/lib/apiServices";
 
 const formSchema = z.object({
     email: z.email("Invalid email format"),
@@ -26,6 +27,8 @@ const formSchema = z.object({
 });
 
 function Register() {
+    const navigate = useNavigate();
+
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
@@ -35,8 +38,13 @@ function Register() {
         },
     });
 
-    function onSubmit(values: z.infer<typeof formSchema>) {
+    async function onSubmit(values: z.infer<typeof formSchema>) {
         console.log(values);
+        const { email, username, password } = values;
+
+        const response = await auth.register(email, username, password);
+        console.log(response);
+        navigate("/");
     }
 
     return (
