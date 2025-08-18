@@ -18,7 +18,7 @@ function Home() {
                     </p>
                 </div>
 
-                <StyledButton variant='ghost'>
+                <StyledButton variant='ghost' className='gap-2'>
                     <span>Add Todo</span>
                     <PlusSquareIcon />
                 </StyledButton>
@@ -35,7 +35,7 @@ function Home() {
                                 <StyledButton
                                     key={filter}
                                     variant={"ghost"}
-                                    styles='capitalize'>
+                                    className='capitalize'>
                                     {filter}
                                 </StyledButton>
                             );

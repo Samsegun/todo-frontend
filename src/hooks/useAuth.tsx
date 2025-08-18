@@ -1,4 +1,17 @@
-import { useQuery } from "@tanstack/react-query";
+import { auth, setToken } from "@/lib/apiServices";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useNavigate } from "react-router";
+
+type SignupInput = {
+    email: string;
+    username: string;
+    password: string;
+};
+
+type SigninInput = {
+    emailUsername: string;
+    password: string;
+};
 
 const checkAuthStatus = () => {
     const token = localStorage.getItem("authToken");
@@ -24,4 +37,53 @@ export const useAuth = () => {
     });
 
     return { token, isLoading, isAuthenticated: !isError && !!token };
+};
+
+export const useSignup = () => {
+    const queryClient = useQueryClient();
+    const navigate = useNavigate();
+
+    return useMutation({
+        mutationFn: ({ email, username, password }: SignupInput) =>
+            auth.register(email, username, password),
+        onSuccess: data => {
+            if (data.token) {
+                setToken(data.token);
+            }
+
+            queryClient.invalidateQueries({ queryKey: ["authUser"] });
+            navigate("/");
+        },
+    });
+};
+
+export const useSignin = () => {
+    const queryClient = useQueryClient();
+    const navigate = useNavigate();
+
+    return useMutation({
+        mutationFn: ({ emailUsername, password }: SigninInput) =>
+            auth.login(emailUsername, password),
+        onSuccess: data => {
+            if (data.token) {
+                setToken(data.token);
+            }
+
+            queryClient.invalidateQueries({ queryKey: ["authUser"] });
+            navigate("/");
+        },
+    });
+};
+
+export const useSignout = () => {
+    const queryClient = useQueryClient();
+    const navigate = useNavigate();
+
+    return useMutation({
+        mutationFn: auth.logout,
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ["authUser"] });
+            navigate("/login");
+        },
+    });
 };

@@ -13,7 +13,8 @@ import { z } from "zod";
 
 import PageHeader from "@/components/customUi/PageHeader";
 import PageWrapper from "@/components/customUi/PageWrapper";
-import StyledButton from "@/components/customUi/StyledButton";
+import { Button } from "@/components/ui/button";
+import { useSignin } from "@/hooks/useAuth";
 import { Link } from "react-router";
 
 const formSchema = z.object({
@@ -22,6 +23,8 @@ const formSchema = z.object({
 });
 
 function Login() {
+    const signinMutation = useSignin();
+
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
@@ -31,7 +34,9 @@ function Login() {
     });
 
     function onSubmit(values: z.infer<typeof formSchema>) {
-        console.log(values);
+        const { emailUsername, password } = values;
+
+        signinMutation.mutate({ emailUsername, password });
     }
 
     return (
@@ -40,6 +45,12 @@ function Login() {
 
             <section className=' mt-8 w-11/12 md:w-4/5 mx-auto'>
                 <Form {...form}>
+                    {signinMutation.isError && (
+                        <p className='text-red-500 my-4 text-center capitalize'>
+                            {signinMutation.error.message}!
+                        </p>
+                    )}
+
                     <form
                         onSubmit={form.handleSubmit(onSubmit)}
                         className='space-y-8'>
@@ -48,7 +59,7 @@ function Login() {
                             name='emailUsername'
                             render={({ field }) => (
                                 <FormItem>
-                                    <FormLabel>Email/Username</FormLabel>
+                                    <FormLabel>Email or Username</FormLabel>
                                     <FormControl>
                                         <Input
                                             placeholder='Email or Username'
@@ -78,18 +89,19 @@ function Login() {
                             )}
                         />
 
-                        <StyledButton
+                        <Button
                             type='submit'
-                            styles='bg-[#32bc9c7b] hover:bg-[#325149da] block mx-auto w-1/2 lg:w-4/12'>
-                            Log In
-                        </StyledButton>
+                            disabled={signinMutation.isPending}
+                            className='bg-[#32bc9c7b] cursor-pointer hover:bg-[#325149da] block mx-auto w-1/2 lg:w-4/12'>
+                            {signinMutation.isPending ? "Log In..." : "Log In"}
+                        </Button>
 
                         <p className='text-center'>
                             Don't have an account?{" "}
                             <Link
-                                to={"/register"}
+                                to={"/signup"}
                                 className='text-[#32bc9c7b] underline font-bold'>
-                                Register
+                                Create account
                             </Link>
                         </p>
                     </form>

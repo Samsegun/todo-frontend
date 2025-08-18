@@ -1,10 +1,18 @@
-import { Menu } from "lucide-react";
+import { useSignout } from "@/hooks/useAuth";
+import { LogOut, Menu } from "lucide-react";
 import { NavLink } from "react-router";
 import MenuModal from "./Menu";
+import StyledButton from "./StyledButton";
 
 const navItems = ["/", "dashboard"];
 
 function Navbar() {
+    const signoutMutation = useSignout();
+
+    function onSignout() {
+        signoutMutation.mutate();
+    }
+
     return (
         <nav>
             {/* desktop nav */}
@@ -26,6 +34,15 @@ function Navbar() {
                         </li>
                     );
                 })}
+                <li>
+                    <StyledButton
+                        variant={"destructive"}
+                        className='gap-2'
+                        onClick={onSignout}>
+                        <span>Sign out</span>
+                        <LogOut size={18} />
+                    </StyledButton>
+                </li>
             </ul>
 
             {/* mobile nav */}
@@ -53,6 +70,15 @@ function Navbar() {
                                 </li>
                             );
                         })}
+                        <li>
+                            <StyledButton
+                                variant={"destructive"}
+                                className='gap-2'
+                                onClick={onSignout}>
+                                <span>Sign out</span>
+                                <LogOut size={18} />
+                            </StyledButton>
+                        </li>
                     </ul>
                 </MenuModal.MobileMenuContent>
             </MenuModal>

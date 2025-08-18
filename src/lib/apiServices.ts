@@ -52,8 +52,6 @@ export interface DeleteTodoRequest {
 const API_BASE_URL =
     import.meta.env.VITE_TODO_API_URL || "http://localhost:3001";
 
-console.log(API_BASE_URL);
-
 class ApiService {
     private axiosInstance: AxiosInstance;
 
@@ -74,6 +72,13 @@ class ApiService {
         this.axiosInstance.interceptors.request.use(
             config => {
                 const token = localStorage.getItem("authToken");
+
+                if (token && this.isTokenExpired(token)) {
+                    this.clearToken();
+                    window.location.href = "/login";
+                    return Promise.reject(new Error("Session timeout"));
+                }
+
                 if (token) {
                     config.headers.Authorization = `Bearer ${token}`;
                 }
@@ -86,11 +91,11 @@ class ApiService {
         this.axiosInstance.interceptors.response.use(
             (response: AxiosResponse) => response,
             error => {
-                if (error.response?.status === 401) {
-                    // token expired or invalid
+                if (error.response?.data?.message === "jwt expired") {
+                    // token expired
                     this.clearToken();
-                    // optionally redirect to login
                     window.location.href = "/login";
+                    return Promise.reject(new Error("Session timeout"));
                 }
 
                 const errorMessage =
@@ -109,6 +114,20 @@ class ApiService {
         localStorage.removeItem("authToken");
     }
 
+    isTokenExpired(token: string) {
+        try {
+            const payload = JSON.parse(atob(token.split(".")[1]));
+
+            /**  for proper comparison, we divide by 1000 because payload will be in
+             *  seconds while Date.now is always in milliseconds. Dividing by 1000
+             * converts milliseconds to seconds */
+            const currentTime = Date.now() / 1000;
+            return payload.exp < currentTime;
+        } catch (error) {
+            return true;
+        }
+    }
+
     // auth requests
     auth = {
         register: async (
@@ -116,15 +135,14 @@ class ApiService {
             username: string,
             password: string
         ): Promise<CreateUserRequest> => {
-            const response = await this.axiosInstance.post("/auth/signup", {
-                email,
-                username,
-                password,
-            });
-
-            if (response.data.token) {
-                this.setToken(response.data.token);
-            }
+            const response = await this.axiosInstance.post<CreateUserRequest>(
+                "/auth/signup",
+                {
+                    email,
+                    username,
+                    password,
+                }
+            );
 
             return response.data;
         },
@@ -132,19 +150,18 @@ class ApiService {
             emailUsername: string,
             password: string
         ): Promise<LoginUserRequest> => {
-            const response = await this.axiosInstance.post("/auth/login", {
-                emailUsername,
-                password,
-            });
-
-            if (response.data.token) {
-                this.setToken(response.data.token);
-            }
+            const response = await this.axiosInstance.post<LoginUserRequest>(
+                "/auth/login",
+                {
+                    emailUsername,
+                    password,
+                }
+            );
 
             return response.data;
         },
         logout: async () => {
-            await this.axiosInstance.post("/auth/logout");
+            // await this.axiosInstance.post("/auth/logout");
             this.clearToken();
         },
     };
@@ -192,4 +209,4 @@ class ApiService {
 
 const apiService = new ApiService(API_BASE_URL);
 
-export const { auth, todos } = apiService;
+export const { auth, todos, setToken, clearToken } = apiService;

@@ -5,7 +5,7 @@ import ProtectedRoute from "./components/customUi/ProtectedRoute";
 import Dashboard from "./pages/Dashboard";
 import Home from "./pages/Home";
 import Login from "./pages/Login";
-import Register from "./pages/Register";
+import Signup from "./pages/Signup";
 
 function App() {
     return (
@@ -17,7 +17,7 @@ function App() {
 
             <Route element={<AuthLayout />}>
                 <Route path='login' element={<Login />} />
-                <Route path='register' element={<Register />} />
+                <Route path='signup' element={<Signup />} />
             </Route>
         </Routes>
     );

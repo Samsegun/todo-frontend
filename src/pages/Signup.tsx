@@ -9,13 +9,13 @@ import {
 import { Input } from "@/components/ui/input";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { Link, useNavigate } from "react-router";
+import { Link } from "react-router";
 import { z } from "zod";
 
 import PageHeader from "@/components/customUi/PageHeader";
 import PageWrapper from "@/components/customUi/PageWrapper";
-import StyledButton from "@/components/customUi/StyledButton";
-import { auth } from "@/lib/apiServices";
+import { Button } from "@/components/ui/button";
+import { useSignup } from "@/hooks/useAuth";
 
 const formSchema = z.object({
     email: z.email("Invalid email format"),
@@ -26,8 +26,8 @@ const formSchema = z.object({
     password: z.string().min(3, "Password must be at least 3 characters"),
 });
 
-function Register() {
-    const navigate = useNavigate();
+function Signup() {
+    const signupMutation = useSignup();
 
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
@@ -39,12 +39,9 @@ function Register() {
     });
 
     async function onSubmit(values: z.infer<typeof formSchema>) {
-        console.log(values);
         const { email, username, password } = values;
 
-        const response = await auth.register(email, username, password);
-        console.log(response);
-        navigate("/");
+        signupMutation.mutate({ email, username, password });
     }
 
     return (
@@ -53,6 +50,12 @@ function Register() {
 
             <section className=' mt-8 w-11/12 md:w-4/5 mx-auto'>
                 <Form {...form}>
+                    {signupMutation.isError && (
+                        <p className='text-red-500 my-4 text-center capitalize'>
+                            {signupMutation.error.message}!
+                        </p>
+                    )}
+
                     <form
                         onSubmit={form.handleSubmit(onSubmit)}
                         className='space-y-8'>
@@ -108,11 +111,15 @@ function Register() {
                                 </FormItem>
                             )}
                         />
-                        <StyledButton
+
+                        <Button
                             type='submit'
-                            styles='bg-[#32bc9c7b] hover:bg-[#325149da] block mx-auto w-1/2 lg:w-4/12'>
-                            Create account
-                        </StyledButton>
+                            disabled={signupMutation.isPending}
+                            className='bg-[#32bc9c7b] cursor-pointer hover:bg-[#325149da] block mx-auto w-1/2 lg:w-4/12'>
+                            {signupMutation.isPending
+                                ? "Creating acccount..."
+                                : "Create account"}
+                        </Button>
 
                         <p className='text-center'>
                             Already have an account?{" "}
@@ -129,4 +136,4 @@ function Register() {
     );
 }
 
-export default Register;
+export default Signup;
