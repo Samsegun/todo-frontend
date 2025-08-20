@@ -169,7 +169,10 @@ class ApiService {
     // todo requests
     todos = {
         getAll: async (): Promise<{ message: string; todos: Todo[] }> => {
-            const response = await this.axiosInstance.get("/todos");
+            const response = await this.axiosInstance.get<{
+                message: string;
+                todos: Todo[];
+            }>("/todos");
             return response.data;
         },
 
