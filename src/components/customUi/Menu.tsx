@@ -12,7 +12,7 @@ import { ModalContent, ModalTrigger } from "./Modal";
 type MenuContextProps = {
     isOpen: boolean;
     position: { x: number; y: number };
-    toggleMenu: (e: MouseEvent, id: string) => void;
+    toggleMenu: (e: MouseEvent<HTMLElement>, id: string) => void;
     closeMenu: () => void;
 };
 
@@ -32,11 +32,9 @@ const MenuModal = ({ children }: { children: ReactNode }) => {
     const [position, setPosition] = useState({ x: 0, y: 0 });
     const ref = useOutsideClick(closeMenu, false);
 
-    const toggleMenu = (e: MouseEvent, id: string) => {
+    const toggleMenu = (e: MouseEvent<HTMLElement>, id: string) => {
         // for mobile menu
         if (!isOpen && e && id === MenuType.MOBILE_MENU) {
-            console.log("menu");
-
             const rect = (e.target as HTMLElement)
                 .closest("button")
                 ?.getBoundingClientRect();
@@ -51,7 +49,6 @@ const MenuModal = ({ children }: { children: ReactNode }) => {
 
         // for modal
         if (!isOpen && e && id === MenuType.MODAL) {
-            console.log("modal");
             setPosition({
                 x: 50,
                 y: 50,

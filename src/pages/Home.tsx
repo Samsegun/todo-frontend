@@ -1,3 +1,5 @@
+import AddTodo from "@/components/customUi/AddTodo";
+import MenuModal from "@/components/customUi/Menu";
 import PageHeader from "@/components/customUi/PageHeader";
 import PageWrapper from "@/components/customUi/PageWrapper";
 import StyledButton from "@/components/customUi/StyledButton";
@@ -18,10 +20,18 @@ function Home() {
                     </p>
                 </div>
 
-                <StyledButton variant='ghost' className='gap-2'>
-                    <span>Add Todo</span>
-                    <PlusSquareIcon />
-                </StyledButton>
+                <MenuModal>
+                    <MenuModal.ModalTrigger>
+                        <StyledButton variant='ghost' className='gap-2'>
+                            <span>Add Todo</span>
+                            <PlusSquareIcon />
+                        </StyledButton>
+                    </MenuModal.ModalTrigger>
+
+                    <MenuModal.ModalContent>
+                        <AddTodo />
+                    </MenuModal.ModalContent>
+                </MenuModal>
             </section>
 
             <main>

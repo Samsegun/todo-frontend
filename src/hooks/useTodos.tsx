@@ -1,5 +1,11 @@
 import { todos } from "@/lib/apiServices";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+
+type CreateTodoInput = {
+    title: string;
+    description?: string;
+    creator: string;
+};
 
 export const useGetTodos = () => {
     const { data, isLoading, isError, error } = useQuery({
@@ -10,4 +16,15 @@ export const useGetTodos = () => {
     });
 
     return { data, isLoading, isError, error };
+};
+
+export const useCreateTodo = () => {
+    const queryClient = useQueryClient();
+
+    return useMutation({
+        mutationFn: (newTodo: CreateTodoInput) => todos.create(newTodo),
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ["todos"] });
+        },
+    });
 };

@@ -115,7 +115,8 @@ function Signup() {
                         <Button
                             type='submit'
                             disabled={signupMutation.isPending}
-                            className='bg-[#32bc9c7b] cursor-pointer hover:bg-[#325149da] block mx-auto w-1/2 lg:w-4/12'>
+                            className='bg-[#32bc9c7b] cursor-pointer hover:bg-[#325149da] 
+                            block mx-auto w-1/2 lg:w-4/12'>
                             {signupMutation.isPending
                                 ? "Creating acccount..."
                                 : "Create account"}

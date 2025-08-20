@@ -1,4 +1,5 @@
 import { auth, setToken } from "@/lib/apiServices";
+import useProfileStore from "@/store/userProfileStore";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useNavigate } from "react-router";
 
@@ -51,6 +52,15 @@ export const useSignup = () => {
                 setToken(data.token);
             }
 
+            const { setUser } = useProfileStore.getState();
+            if (data.user) {
+                setUser({
+                    _id: data.user._id,
+                    email: data.user.email,
+                    username: data.user.username,
+                });
+            }
+
             queryClient.invalidateQueries({ queryKey: ["authUser"] });
             navigate("/");
         },
@@ -69,6 +79,16 @@ export const useSignin = () => {
                 setToken(data.token);
             }
 
+            // add user data to zustand store
+            const { setUser } = useProfileStore.getState();
+            if (data.user) {
+                setUser({
+                    _id: data.user._id,
+                    email: data.user.email,
+                    username: data.user.username,
+                });
+            }
+
             queryClient.invalidateQueries({ queryKey: ["authUser"] });
             navigate("/");
         },
@@ -82,6 +102,10 @@ export const useSignout = () => {
     return useMutation({
         mutationFn: auth.logout,
         onSuccess: () => {
+            // add user data to zustand store
+            const { clearUser } = useProfileStore.getState();
+            clearUser();
+
             queryClient.invalidateQueries({ queryKey: ["authUser"] });
             navigate("/login");
         },

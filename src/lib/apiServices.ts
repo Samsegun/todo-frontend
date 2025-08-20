@@ -29,10 +29,10 @@ export interface Todo {
 }
 
 export interface CreateTodoRequest {
-    _id: string;
+    // _id: string;
     title: string;
     description?: string;
-    completed: boolean;
+    // completed: boolean;
     creator: string;
 }
 
@@ -181,10 +181,20 @@ class ApiService {
             return response.data;
         },
 
-        create: async (
-            todo: CreateTodoRequest
-        ): Promise<{ message: string; todo: CreateTodoRequest }> => {
-            const response = await this.axiosInstance.post("/todos", todo);
+        create: async ({
+            title,
+            description,
+            creator,
+        }: CreateTodoRequest): Promise<{
+            message: string;
+            todo: CreateTodoRequest;
+        }> => {
+            const newTodo: CreateTodoRequest = { title, creator };
+            if (description) {
+                newTodo.description = description;
+            }
+
+            const response = await this.axiosInstance.post("/todos", newTodo);
             return response.data;
         },
 
