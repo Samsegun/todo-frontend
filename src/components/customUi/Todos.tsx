@@ -1,10 +1,20 @@
-import { useGetTodos } from "@/hooks/useTodos";
+import type { Todo } from "@/lib/apiServices";
 import { Ban, LoaderCircle } from "lucide-react";
 import TodoOperations from "./TodoOperations";
 
-function Todos() {
-    const { data, isLoading, isError, error } = useGetTodos();
+export type TodosProps = {
+    data:
+        | {
+              message: string;
+              todos: Todo[];
+          }
+        | undefined;
+    isLoading: boolean;
+    isError: boolean;
+    error: Error | null;
+};
 
+function Todos({ data, isLoading, isError, error }: TodosProps) {
     if (isLoading) {
         return (
             <div className='flex justify-center mt-4'>
@@ -24,6 +34,17 @@ function Todos() {
                     <p className='capitalize'>{error?.message}</p>
                 </h2>
             </div>
+        );
+    }
+
+    if (!data?.todos.length) {
+        return (
+            <section className='text-center text-xl h-48 flex items-center justify-center italic'>
+                <p>
+                    Your todo list is empty. <br /> Start by clicking on Add
+                    Todo button above.{" "}
+                </p>
+            </section>
         );
     }
 

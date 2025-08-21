@@ -2,6 +2,8 @@ import { useDeleteTodo, useUpdateTodo } from "@/hooks/useTodos";
 import type { Todo, UpdateTodoRequest } from "@/lib/apiServices";
 import { Check, Pencil, Trash } from "lucide-react";
 import { Button } from "../ui/button";
+import EditTodo from "./EditTodo";
+import MenuModal from "./Menu";
 
 function TodoOperations({ todo }: { todo: Todo }) {
     const updateTodoMutation = useUpdateTodo();
@@ -17,6 +19,7 @@ function TodoOperations({ todo }: { todo: Todo }) {
 
     return (
         <section className='flex items-center justify-end flex-wrap gap-2'>
+            {/* mark as complete */}
             {updateTodoMutation.isPending ? (
                 <Button
                     disabled
@@ -43,11 +46,21 @@ function TodoOperations({ todo }: { todo: Todo }) {
                 </Button>
             )}
 
-            <Button className='bg-[#ff784b] cursor-pointer hover:bg-[#ff784bbb] w-20 md:w-auto'>
-                <span className='hidden md:flex'>Edit</span>
-                <Pencil />
-            </Button>
+            {/* edit todo */}
+            <MenuModal>
+                <MenuModal.ModalTrigger>
+                    <Button className='bg-[#ff784b] cursor-pointer hover:bg-[#ff784bbb] w-20 md:w-auto'>
+                        <span className='hidden md:flex'>Edit</span>
+                        <Pencil />
+                    </Button>
+                </MenuModal.ModalTrigger>
 
+                <MenuModal.ModalContent>
+                    <EditTodo todo={todo} />
+                </MenuModal.ModalContent>
+            </MenuModal>
+
+            {/* delete todo */}
             {deleteTodoMutation.isPending ? (
                 <Button
                     disabled

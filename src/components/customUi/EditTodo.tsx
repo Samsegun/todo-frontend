@@ -1,5 +1,5 @@
-import { useCreateTodo } from "@/hooks/useTodos";
-import useProfileStore from "@/store/userProfileStore";
+import { useUpdateTodo } from "@/hooks/useTodos";
+import type { Todo } from "@/lib/apiServices";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -27,16 +27,15 @@ const formSchema = z.object({
         .optional(),
 });
 
-function AddTodo() {
-    const createTodoMutation = useCreateTodo();
+function EditTodo({ todo }: { todo: Todo }) {
+    const updateTodoMutation = useUpdateTodo();
     const { closeMenu } = useMenuModalContext();
 
-    const { user } = useProfileStore();
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
-            title: "",
-            description: "",
+            title: todo.title,
+            description: todo.description,
         },
     });
 
@@ -44,10 +43,9 @@ function AddTodo() {
         const { title, description } = values;
 
         try {
-            await createTodoMutation.mutateAsync({
-                creator: user!._id,
-                title,
-                description,
+            await updateTodoMutation.mutateAsync({
+                id: todo._id,
+                updates: { title, description },
             });
             closeMenu();
         } catch (error) {
@@ -57,13 +55,13 @@ function AddTodo() {
 
     return (
         <Form {...form}>
-            {createTodoMutation.isError && (
+            {updateTodoMutation.isError && (
                 <p className='text-red-500 my-4 text-center capitalize'>
-                    {createTodoMutation.error.message}!
+                    {updateTodoMutation.error.message}!
                 </p>
             )}
 
-            <p className='text-2xl text-center font-bold my-4'>Add Todo</p>
+            <p className='text-2xl text-center font-bold my-4'>Edit Todo</p>
 
             <form
                 onSubmit={form.handleSubmit(onSubmit)}
@@ -108,11 +106,11 @@ function AddTodo() {
                 <p className='flex justify-end gap-2'>
                     <StyledButton
                         type='submit'
-                        disabled={createTodoMutation.isPending}
+                        disabled={updateTodoMutation.isPending}
                         variant={"todoOps"}>
-                        {createTodoMutation.isPending
-                            ? "Creating Todo..."
-                            : "Create Todo"}
+                        {updateTodoMutation.isPending
+                            ? "Updating Todo..."
+                            : "Update Todo"}
                     </StyledButton>
 
                     <StyledButton
@@ -127,4 +125,4 @@ function AddTodo() {
     );
 }
 
-export default AddTodo;
+export default EditTodo;

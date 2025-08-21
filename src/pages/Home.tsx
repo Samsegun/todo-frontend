@@ -3,21 +3,27 @@ import MenuModal from "@/components/customUi/Menu";
 import PageHeader from "@/components/customUi/PageHeader";
 import PageWrapper from "@/components/customUi/PageWrapper";
 import StyledButton from "@/components/customUi/StyledButton";
+import TodoActivity from "@/components/customUi/TodoActivity";
 import Todos from "@/components/customUi/Todos";
+import { useGetTodos } from "@/hooks/useTodos";
 import { PlusSquareIcon } from "lucide-react";
 
 const FilterOptions = ["all", "active", "completed"];
 
 function Home() {
+    const { data, isLoading, isError, error } = useGetTodos();
+
     return (
         <PageWrapper>
             <section className='flex justify-between items-start'>
                 <div className='space-y-2'>
                     <PageHeader>Your Todos</PageHeader>
 
-                    <p>
-                        <span>3 active, </span> <span>0 completed</span>
-                    </p>
+                    <TodoActivity
+                        data={data}
+                        isLoading={isLoading}
+                        isError={isError}
+                    />
                 </div>
 
                 <MenuModal>
@@ -54,7 +60,12 @@ function Home() {
                 </section>
 
                 {/* todo list */}
-                <Todos />
+                <Todos
+                    data={data}
+                    isLoading={isLoading}
+                    isError={isError}
+                    error={error}
+                />
             </main>
         </PageWrapper>
     );

@@ -1,5 +1,6 @@
 import { todos, type UpdateTodoRequest } from "@/lib/apiServices";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import toast from "react-hot-toast";
 
 type CreateTodoInput = {
     title: string;
@@ -26,8 +27,10 @@ export const useCreateTodo = () => {
     return useMutation({
         mutationFn: (newTodo: CreateTodoInput) => todos.create(newTodo),
         onSuccess: () => {
+            toast.success("Todo successfully created");
             queryClient.invalidateQueries({ queryKey: ["todos"] });
         },
+        onError: err => toast.error(err.message),
     });
 };
 
@@ -37,8 +40,11 @@ export const useUpdateTodo = () => {
     return useMutation({
         mutationFn: ({ id, updates }: UpdateTodo) => todos.update(id, updates),
         onSuccess: () => {
+            toast.success("Todo successfully updated");
+
             queryClient.invalidateQueries({ queryKey: ["todos"] });
         },
+        onError: err => toast.error(err.message),
     });
 };
 
@@ -48,7 +54,10 @@ export const useDeleteTodo = () => {
     return useMutation({
         mutationFn: ({ id }: { id: string }) => todos.delete(id),
         onSuccess: () => {
+            toast.success("Todo successfully deleted");
+
             queryClient.invalidateQueries({ queryKey: ["todos"] });
         },
+        onError: err => toast.error(err.message),
     });
 };
