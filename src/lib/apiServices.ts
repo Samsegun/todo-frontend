@@ -29,18 +29,17 @@ export interface Todo {
 }
 
 export interface CreateTodoRequest {
-    // _id: string;
     title: string;
     description?: string;
-    // completed: boolean;
     creator: string;
 }
 
-// export interface UpdateTodoRequest {
-//     updatedTodo: {
+export interface UpdateTodoRequest {
+    title?: string;
+    description?: string;
+    completed?: boolean;
+}
 
-//     }
-// }
 export interface DeleteTodoRequest {
     message: string;
     deletedResult: {
@@ -199,8 +198,8 @@ class ApiService {
         },
 
         update: async (
-            id: number,
-            updates: Todo
+            id: string,
+            updates: UpdateTodoRequest
         ): Promise<{ message: string; updatedTodo: Todo }> => {
             const response = await this.axiosInstance.put(
                 `/todos/${id}`,
@@ -209,7 +208,7 @@ class ApiService {
             return response.data;
         },
 
-        delete: async (id: number): Promise<DeleteTodoRequest> => {
+        delete: async (id: string): Promise<DeleteTodoRequest> => {
             const response = await this.axiosInstance.delete(`/todos/${id}`);
 
             return response.data;
