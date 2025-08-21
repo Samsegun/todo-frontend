@@ -27,8 +27,6 @@ function Todos() {
         );
     }
 
-    console.log(data);
-
     return (
         <section className='space-y-8'>
             {data?.todos.map(todo => {

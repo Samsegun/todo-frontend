@@ -1,34 +1,27 @@
-import { useSignout } from "@/hooks/useAuth";
-import { LogOut, Menu } from "lucide-react";
+import { LogOut } from "lucide-react";
 import { NavLink } from "react-router";
-import MenuModal from "./Menu";
-import MobileMenuWrapper from "./MobileMenuWrapper";
+import MenuModal, { useMenuModalContext } from "./Menu";
+import { navItems } from "./Navbar";
 import StyledButton from "./StyledButton";
 
-export const navItems = ["/", "dashboard"];
-
-function Navbar() {
-    const signoutMutation = useSignout();
-
-    function onSignout() {
-        signoutMutation.mutate();
-    }
+function MobileMenuWrapper({ onSignout }: { onSignout: () => void }) {
+    const { closeMenu } = useMenuModalContext();
 
     return (
-        <nav>
-            {/* desktop nav */}
-            <ul className='hidden gap-3 items-center md:flex'>
+        <MenuModal.MobileMenuContent>
+            <ul className='items-start px-4 py-2 space-y-8 text-xl'>
                 {navItems.map(link => {
                     return (
                         <li key={link}>
                             <NavLink
                                 to={link === "/" ? link : `/${link}`}
+                                onClick={closeMenu}
                                 className={({ isActive }) =>
                                     `${
                                         isActive
                                             ? "text-[#32bc9b]"
                                             : "text-white"
-                                    } capitalize hover:text-[#32bc9c7b]`
+                                    } capitalize block`
                                 }>
                                 {link === "/" ? "home" : link}
                             </NavLink>
@@ -45,17 +38,8 @@ function Navbar() {
                     </StyledButton>
                 </li>
             </ul>
-
-            {/* mobile nav */}
-            <MenuModal>
-                <MenuModal.MenuTrigger>
-                    <Menu />
-                </MenuModal.MenuTrigger>
-
-                <MobileMenuWrapper onSignout={onSignout} />
-            </MenuModal>
-        </nav>
+        </MenuModal.MobileMenuContent>
     );
 }
 
-export default Navbar;
+export default MobileMenuWrapper;
