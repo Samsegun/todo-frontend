@@ -22,11 +22,7 @@ function Home() {
                 <div className='space-y-2'>
                     <PageHeader>Your Todos</PageHeader>
 
-                    <TodoActivity
-                        data={data}
-                        isLoading={isLoading}
-                        isError={isError}
-                    />
+                    <TodoActivity data={data} currentFilter={currentFilter} />
                 </div>
 
                 <MenuModal>

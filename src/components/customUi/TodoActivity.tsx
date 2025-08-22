@@ -1,32 +1,51 @@
+import { useMemo } from "react";
 import type { TodosProps } from "./Todos";
 
-function TodoActivity({ data, isLoading, isError }: Omit<TodosProps, "error">) {
-    if (isLoading) {
-        <span className='italic'>Loading...</span>;
+function TodoActivity({
+    data,
+    currentFilter,
+}: Omit<TodosProps, "isLoading" | "isError" | "error"> & {
+    currentFilter: string;
+}) {
+    const { activeCount, completedCount } = useMemo(() => {
+        if (!data?.todos) return { activeCount: 0, completedCount: 0 };
+
+        const active = data.todos.filter(todo => !todo.completed).length;
+        const completed = data.todos.filter(todo => todo.completed).length;
+
+        return { activeCount: active, completedCount: completed };
+    }, [data]);
+
+    if (!data) {
+        return null;
     }
 
-    if (isError) {
-        <span className='italic text-red-500'>Error loading activity</span>;
-    }
-
-    return (
-        <p>
-            {data?.todos.length ? (
-                <>
-                    <span>
-                        {data?.todos.filter(todo => !todo.completed).length}{" "}
-                        active,{" "}
-                    </span>
-                    <span>
-                        {data?.todos.filter(todo => todo.completed).length}{" "}
-                        completed
-                    </span>{" "}
-                </>
-            ) : (
+    if (data.todos.length === 0) {
+        return (
+            <p>
                 <span className='italic'>No activity yet</span>
-            )}
-        </p>
-    );
+            </p>
+        );
+    }
+
+    const renderActivities = () => {
+        switch (currentFilter) {
+            case "active":
+                return <span>{activeCount} active</span>;
+            case "completed":
+                return <span>{completedCount} completed</span>;
+
+            default:
+                return (
+                    <>
+                        <span>{activeCount} active, </span>
+                        <span>{completedCount} completed</span>
+                    </>
+                );
+        }
+    };
+
+    return <p>{renderActivities()}</p>;
 }
 
 export default TodoActivity;
