@@ -5,7 +5,7 @@ import MenuModal from "./Menu";
 import MobileMenuWrapper from "./MobileMenuWrapper";
 import StyledButton from "./StyledButton";
 
-export const navItems = ["/", "dashboard"];
+export const navItems = ["home", "dashboard"];
 
 function Navbar() {
     const signoutMutation = useSignout();
@@ -22,7 +22,7 @@ function Navbar() {
                     return (
                         <li key={link}>
                             <NavLink
-                                to={link === "/" ? link : `/${link}`}
+                                to={`/${link}`}
                                 className={({ isActive }) =>
                                     `${
                                         isActive
@@ -30,7 +30,7 @@ function Navbar() {
                                             : "text-white"
                                     } capitalize hover:text-[#32bc9c7b]`
                                 }>
-                                {link === "/" ? "home" : link}
+                                {link}
                             </NavLink>
                         </li>
                     );

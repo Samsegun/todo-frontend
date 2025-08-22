@@ -1,4 +1,5 @@
 import AddTodo from "@/components/customUi/AddTodo";
+import Filter from "@/components/customUi/Filter";
 import MenuModal from "@/components/customUi/Menu";
 import PageHeader from "@/components/customUi/PageHeader";
 import PageWrapper from "@/components/customUi/PageWrapper";
@@ -7,8 +8,6 @@ import TodoActivity from "@/components/customUi/TodoActivity";
 import Todos from "@/components/customUi/Todos";
 import { useGetTodos } from "@/hooks/useTodos";
 import { PlusSquareIcon } from "lucide-react";
-
-const FilterOptions = ["all", "active", "completed"];
 
 function Home() {
     const { data, isLoading, isError, error } = useGetTodos();
@@ -42,22 +41,7 @@ function Home() {
 
             <main>
                 {/* filters */}
-                <section className='my-8'>
-                    <p
-                        className='w-fit flex items-center space-x-1
-                     rounded-lg border border-gray-200'>
-                        {FilterOptions.map(filter => {
-                            return (
-                                <StyledButton
-                                    key={filter}
-                                    variant={"ghost"}
-                                    className='capitalize'>
-                                    {filter}
-                                </StyledButton>
-                            );
-                        })}
-                    </p>
-                </section>
+                <Filter />
 
                 {/* todo list */}
                 <Todos

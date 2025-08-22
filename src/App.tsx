@@ -1,6 +1,6 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Toaster } from "react-hot-toast";
-import { BrowserRouter, Route, Routes } from "react-router";
+import { BrowserRouter, Navigate, Route, Routes } from "react-router";
 import "./App.css";
 import AuthLayout from "./components/customUi/AuthLayout";
 import ProtectedRoute from "./components/customUi/ProtectedRoute";
@@ -17,7 +17,9 @@ function App() {
             <BrowserRouter>
                 <Routes>
                     <Route element={<ProtectedRoute />}>
-                        <Route index element={<Home />} />
+                        <Route index element={<Navigate to='home' />} />
+
+                        <Route path='home' element={<Home />} />
                         <Route path='dashboard' element={<Dashboard />} />
                     </Route>
 
