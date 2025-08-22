@@ -1,4 +1,4 @@
-import { todos, type UpdateTodoRequest } from "@/lib/apiServices";
+import { todos, type Todo, type UpdateTodoRequest } from "@/lib/apiServices";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import toast from "react-hot-toast";
 
@@ -10,10 +10,13 @@ type CreateTodoInput = {
 
 export type UpdateTodo = { id: string; updates: UpdateTodoRequest };
 
-export const useGetTodos = () => {
-    const { data, isLoading, isError, error } = useQuery({
-        queryKey: ["todos"],
-        queryFn: todos.getAll,
+export const useGetTodos = (filter = "all") => {
+    const { data, isLoading, isError, error } = useQuery<{
+        message: string;
+        todos: Todo[];
+    }>({
+        queryKey: ["todos", filter],
+        queryFn: () => todos.getAll(filter),
         refetchOnWindowFocus: false,
         staleTime: Infinity,
     });

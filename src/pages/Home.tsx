@@ -8,9 +8,13 @@ import TodoActivity from "@/components/customUi/TodoActivity";
 import Todos from "@/components/customUi/Todos";
 import { useGetTodos } from "@/hooks/useTodos";
 import { PlusSquareIcon } from "lucide-react";
+import { useSearchParams } from "react-router";
 
 function Home() {
-    const { data, isLoading, isError, error } = useGetTodos();
+    const [searchParams] = useSearchParams();
+    const currentFilter = searchParams.get("status") || "all";
+
+    const { data, isLoading, isError, error } = useGetTodos(currentFilter);
 
     return (
         <PageWrapper>
