@@ -1,13 +1,13 @@
-import { useDeleteTodo, useUpdateTodo } from "@/hooks/useTodos";
+import { useUpdateTodo } from "@/hooks/useTodos";
 import type { Todo, UpdateTodoRequest } from "@/lib/apiServices";
 import { Check, Pencil, Trash } from "lucide-react";
 import { Button } from "../ui/button";
+import DeleteTodo from "./DeleteTodo";
 import EditTodo from "./EditTodo";
 import MenuModal from "./Menu";
 
 function TodoOperations({ todo }: { todo: Todo }) {
     const updateTodoMutation = useUpdateTodo();
-    const deleteTodoMutation = useDeleteTodo();
 
     async function updateTodo(id: string, updates: UpdateTodoRequest) {
         try {
@@ -61,23 +61,20 @@ function TodoOperations({ todo }: { todo: Todo }) {
             </MenuModal>
 
             {/* delete todo */}
-            {deleteTodoMutation.isPending ? (
-                <Button
-                    disabled
-                    variant={"destructive"}
-                    className='w-20 cursor-pointer md:w-auto'>
-                    Deleting...
-                </Button>
-            ) : (
-                <Button
-                    disabled={deleteTodoMutation.isPending}
-                    variant={"destructive"}
-                    className='w-20 cursor-pointer md:w-auto'
-                    onClick={() => deleteTodoMutation.mutate({ id: todo._id })}>
-                    <span className='hidden md:flex'>Delete</span>
-                    <Trash />
-                </Button>
-            )}
+            <MenuModal>
+                <MenuModal.ModalTrigger>
+                    <Button
+                        variant={"destructive"}
+                        className='w-20 cursor-pointer md:w-auto'>
+                        <span className='hidden md:flex'>Delete</span>
+                        <Trash />
+                    </Button>
+                </MenuModal.ModalTrigger>
+
+                <MenuModal.ModalContent>
+                    <DeleteTodo todo={todo} />
+                </MenuModal.ModalContent>
+            </MenuModal>
         </section>
     );
 }
