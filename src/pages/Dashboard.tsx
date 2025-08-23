@@ -1,8 +1,11 @@
+import PageHeader from "@/components/customUi/PageHeader";
+import PageWrapper from "@/components/customUi/PageWrapper";
+
 function Dashboard() {
     return (
-        <div>
-            <h1>My dashboard</h1>
-        </div>
+        <PageWrapper>
+            <PageHeader>My dashboard</PageHeader>
+        </PageWrapper>
     );
 }
 
