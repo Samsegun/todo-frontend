@@ -40,6 +40,11 @@ export interface UpdateTodoRequest {
     completed?: boolean;
 }
 
+export interface UpdateUserRequest {
+    username?: string;
+    password?: string;
+}
+
 export interface DeleteTodoRequest {
     message: string;
     deletedResult: {
@@ -162,6 +167,16 @@ class ApiService {
         logout: async () => {
             // await this.axiosInstance.post("/auth/logout");
             this.clearToken();
+        },
+        update: async (
+            userId: string,
+            updates: UpdateUserRequest
+        ): Promise<{ message: string; updatedUser: User }> => {
+            const response = await this.axiosInstance.put<{
+                message: string;
+                updatedUser: User;
+            }>(`/auth/update/${userId}`, updates);
+            return response.data;
         },
     };
 

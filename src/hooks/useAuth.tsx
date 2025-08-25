@@ -1,6 +1,7 @@
 import { auth, setToken } from "@/lib/apiServices";
 import useProfileStore from "@/store/userProfileStore";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import toast from "react-hot-toast";
 import { useNavigate } from "react-router";
 
 type SignupInput = {
@@ -12,6 +13,14 @@ type SignupInput = {
 type SigninInput = {
     emailUsername: string;
     password: string;
+};
+
+type UpdateUserInput = {
+    userId: string;
+    updates: {
+        username?: string;
+        password?: string;
+    };
 };
 
 const checkAuthStatus = () => {
@@ -109,5 +118,30 @@ export const useSignout = () => {
             queryClient.invalidateQueries({ queryKey: ["authUser"] });
             navigate("/login");
         },
+    });
+};
+
+export const useUpdateUser = () => {
+    const queryClient = useQueryClient();
+    const { setUser } = useProfileStore.getState();
+
+    return useMutation({
+        mutationFn: ({ userId, updates }: UpdateUserInput) =>
+            auth.update(userId, updates),
+        onSuccess: data => {
+            toast.success("User successfully updated");
+
+            // add user data to zustand store
+            if (data.updatedUser) {
+                setUser({
+                    _id: data.updatedUser._id,
+                    email: data.updatedUser.email,
+                    username: data.updatedUser.username,
+                });
+            }
+
+            queryClient.invalidateQueries({ queryKey: ["authUser"] });
+        },
+        onError: err => toast.error(err.message),
     });
 };
